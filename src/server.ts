@@ -1,6 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import {filterImageFromURL, deleteLocalFiles} from './util/util';
+import { filterImageFromURL, deleteLocalFiles } from './util/util';
 
 (async () => {
 
@@ -9,7 +9,7 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
 
   // Set the network port
   const port = process.env.PORT || 8082;
-  
+
   // Use the body parser middleware for post requests
   app.use(bodyParser.json());
 
@@ -32,22 +32,30 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   //! END @TODO1
   // Root Endpoint
   // Displays a simple message to the user
-  app.get( "/", async ( req, res ) => {
+  app.get("/filteredimage", async (req, res) => {
     // validate the url is passed with ending as image eg. /image.png, jpg
     let desired = req.query.image_url;
-    if(desired.endsWith('.jpg')|| desired.endsWith('.png')){
-      let filtered = await filterImageFromURL(req.query.image_url);
-      res.sendFile(filtered);
-    }else{
-      res.send("We need valid URL with PNG or JPG file provided")
+    if (desired != undefined) {
+      if (desired.endsWith('.jpg') || desired.endsWith('.png')) {
+        let filtered = await filterImageFromURL(req.query.image_url);
+        res.sendFile(filtered);
+        // res.send(req.query.image_url);
+      }else{
+        res.send("We need valid URL with PNG or JPG file provided");
+      }
+      
+    } else {
+      res.send("please provide url: /filteredimage?image_url={{URL}}");
     }
-    
-  } );
-  
+  });
+
+  app.get("/", async (req, res) => {
+    res.send("please provide url: /filteredimage?image_url={{URL}}");
+  });
 
   // Start the Server
-  app.listen( port, () => {
-      console.log( `server running http://localhost:${ port }` );
-      console.log( `press CTRL+C to stop server` );
-  } );
+  app.listen(port, () => {
+    console.log(`server running http://localhost:${port}`);
+    console.log(`press CTRL+C to stop server`);
+  });
 })();
