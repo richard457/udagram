@@ -34,10 +34,10 @@ import { filterImageFromURL, deleteLocalFiles } from './util/util';
   // Displays a simple message to the user
   app.get("/filteredimage", async (req, res) => {
     // validate the url is passed with ending as image eg. /image.png, jpg
-    let desired = req.query.image_url;
+    let desired: string = req.query.image_url;
     if (desired != undefined) {
       if (desired.endsWith('.jpg') || desired.endsWith('.png')) {
-        let filtered = await filterImageFromURL(req.query.image_url);
+        let filtered: string = await filterImageFromURL(req.query.image_url);
         res.sendFile(filtered);
         // res.send(req.query.image_url);
       }else{
