@@ -37,19 +37,21 @@ import { filterImageFromURL, deleteLocalFiles } from './util/util';
     let desired: string = req.query.image_url;
     if (desired != undefined) {
       if (desired.endsWith('.jpg') || desired.endsWith('.png')) {
-        let filtered: string = await filterImageFromURL(req.query.image_url);
-        res.sendFile(filtered);
-        // res.send(req.query.image_url);
+        let filtered: string = await filterImageFromURL(desired);
+        res.statusCode = 200;
+        res.sendFile(filtered)
       }else{
+        res.statusCode = 202;
         res.send("We need valid URL with PNG or JPG file provided");
-      }
-      
+      } 
     } else {
+      res.statusCode = 202;
       res.send("please provide url: /filteredimage?image_url={{URL}}");
     }
   });
 
   app.get("/", async (req, res) => {
+    res.statusCode = 202;
     res.send("please provide url: /filteredimage?image_url={{URL}}");
   });
 
